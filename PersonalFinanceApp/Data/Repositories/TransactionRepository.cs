@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PersonalFinanceApp.Models;
 using SQLite;
 
 namespace PersonalFinanceApp.Data.Repositories
@@ -16,7 +17,7 @@ namespace PersonalFinanceApp.Data.Repositories
             _database = new SQLiteAsyncConnection(DBInitializer.DataBasePath);
         }
 
-        public async Task<List<Transaction>> GetAllTransaction()
+        public async Task<List<Transaction>> GetAllTransactions()
         {
             try
             {

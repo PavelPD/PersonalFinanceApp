@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PersonalFinanceApp.Models;
 
 namespace PersonalFinanceApp.Data.Repositories
 {
     public interface IAccountRepository
     {
-        Task<List<Account>> GetAllAccount();
+        Task<List<Account>> GetAllAccounts();
         Task<Account> GetAccountById(int id);
         Task AddAccount(Account account);
         Task UpdateAccount(Account account);

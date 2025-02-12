@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PersonalFinanceApp.Data
+namespace PersonalFinanceApp.Models
 {
     public class Category
     {

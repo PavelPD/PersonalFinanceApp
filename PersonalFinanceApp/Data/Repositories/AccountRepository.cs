@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using PersonalFinanceApp.Models;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace PersonalFinanceApp.Data.Repositories
             _database = new SQLiteAsyncConnection(DBInitializer.DataBasePath);
         }
 
-        public async Task<List<Account>> GetAllAccount()
+        public async Task<List<Account>> GetAllAccounts()
         {
             try
             {

@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PersonalFinanceApp.Data
+namespace PersonalFinanceApp.Models
 {
     public class Account
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public float Balance { get; set; }
+        public double Balance { get; set; }
     }
 }

@@ -64,7 +64,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="BusinessLogic\" />
 	  <Folder Include="ViewModels\" />
 	  <Folder Include="Services\" />
 	</ItemGroup>
