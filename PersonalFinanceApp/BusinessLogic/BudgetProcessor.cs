@@ -1,10 +1,5 @@
 ﻿using PersonalFinanceApp.Data.Repositories;
 using PersonalFinanceApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalFinanceApp.BusinessLogic
 {
@@ -26,10 +21,10 @@ namespace PersonalFinanceApp.BusinessLogic
 
         public async Task<string> AddBudget(Budget budget)
         {
-            var categury = await _categoryRepository.GetCategoryById(budget.CategoryId);
+            var categury = await _categoryRepository.GetCategoryById(budget.Category_id);
             if(categury.Type != "expense")
             {
-                return "Ошибка6 бюджет можно назначить только на категорию расходов.";
+                return "Ошибка бюджет можно назначить только на категорию расходов.";
             }
 
             budget.Month = DateTime.Now.Month;
@@ -47,7 +42,7 @@ namespace PersonalFinanceApp.BusinessLogic
                 return "Ошибка: бюджет не найден.";
             }
 
-            var categury = await _categoryRepository.GetCategoryById(budget.CategoryId);
+            var categury = await _categoryRepository.GetCategoryById(budget.Category_id);
             if (categury.Type != "expense")
             {
                 return "Ошибка6 бюджет можно назначить только на категорию расходов.";

@@ -1,10 +1,5 @@
 ﻿using PersonalFinanceApp.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalFinanceApp.Data.Repositories
 {
@@ -29,11 +24,12 @@ namespace PersonalFinanceApp.Data.Repositories
             }
         }
 
-        public async Task<Budget> GetBudgetById(int id)
+        public async Task<Budget?> GetBudgetById(int id)
         {
             try
             {
-                return await _database.FindAsync<Budget>(id);
+                var result = await _database.QueryAsync<Budget>("SELECT * FROM Budgets WHERE id = ?", id);
+                return result.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -46,7 +42,7 @@ namespace PersonalFinanceApp.Data.Repositories
             try
             {
                 await _database.ExecuteAsync("INSERT INTO Budgets (name, category_id, amount, spent, month, year) VALUES (?, ?, ?, ?, ?, ?)",
-                    budget.Name, budget.CategoryId, budget.Amount, budget.Spent, budget.Month, budget.Year);
+                    budget.Name, budget.Category_id, budget.Amount, budget.Spent, budget.Month, budget.Year);
             }
             catch (Exception ex)
             {
@@ -59,7 +55,7 @@ namespace PersonalFinanceApp.Data.Repositories
             try
             {
                 await _database.ExecuteAsync("UPDATE Budgets SET name = ?, category_id = ?, amount = ?, spent = ?, month = ?, year = ? WHERE id = ?",
-                    budget.Name, budget.CategoryId, budget.Amount, budget.Spent, budget.Month, budget.Year, budget.Id);
+                    budget.Name, budget.Category_id, budget.Amount, budget.Spent, budget.Month, budget.Year, budget.Id);
             }
             catch (Exception ex)
             {

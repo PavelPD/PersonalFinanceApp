@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PersonalFinanceApp.Models;
+﻿using PersonalFinanceApp.Models;
 using SQLite;
 
 namespace PersonalFinanceApp.Data.Repositories
@@ -29,11 +24,12 @@ namespace PersonalFinanceApp.Data.Repositories
             }
         }
 
-        public async Task<Transaction> GetTransactionById(int id)
+        public async Task<Transaction?> GetTransactionById(int id)
         {
             try
             {
-                return await _database.FindAsync<Transaction>(id);
+                var result = await _database.QueryAsync<Transaction>("SELECT * FROM Transactions WHERE id = ?", id);
+                return result.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -48,8 +44,8 @@ namespace PersonalFinanceApp.Data.Repositories
                 await _database.ExecuteAsync(@"
                     INSERT INTO Transactions (type, amount, account_id, category_id, comment, date)
                     VALUES (?, ?, ?, ?, ?, ?)",
-                    transaction.Type, transaction.Amount, transaction.AccountId,
-                    transaction.CategoryId, transaction.Comment, transaction.Date);
+                    transaction.Type, transaction.Amount, transaction.Account_id,
+                    transaction.Category_id, transaction.Comment, transaction.Date);
             }
             catch (Exception ex)
             {
@@ -65,8 +61,8 @@ namespace PersonalFinanceApp.Data.Repositories
                     UPDATE Transactions
                     SET type = ?, amount = ?, account_id = ?, category_id = ?, comment = ?, date = ?
                     WHERE id = ?",
-                    transaction.Type, transaction.Amount, transaction.AccountId,
-                    transaction.CategoryId, transaction.Comment, transaction.Date, transaction.Id);
+                    transaction.Type, transaction.Amount, transaction.Account_id,
+                    transaction.Category_id, transaction.Comment, transaction.Date, transaction.Id);
             }
             catch (Exception ex)
             {
@@ -78,7 +74,7 @@ namespace PersonalFinanceApp.Data.Repositories
         {
             try
             {
-                await _database.ExecuteAsync("DELETE FROM Transaction WHERE id = ?", id);
+                await _database.ExecuteAsync("DELETE FROM Transactions WHERE id = ?", id);
             }
             catch (Exception ex)
             {

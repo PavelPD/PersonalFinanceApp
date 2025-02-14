@@ -1,10 +1,5 @@
 ﻿using PersonalFinanceApp.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalFinanceApp.Data.Repositories
 {
@@ -29,11 +24,12 @@ namespace PersonalFinanceApp.Data.Repositories
             }
         }
 
-        public async Task<Category> GetCategoryById(int id)
+        public async Task<Category?> GetCategoryById(int id)
         {
             try
-            {
-                return await _database.FindAsync<Category>(id);
+            {                
+                var result = await _database.QueryAsync<Category>("SELECT * FROM Categories WHERE id = ?", id);
+                return result.FirstOrDefault();
             }
             catch (Exception ex)
             {

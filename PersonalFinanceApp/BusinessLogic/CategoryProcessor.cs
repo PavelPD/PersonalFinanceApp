@@ -1,20 +1,19 @@
 ﻿using PersonalFinanceApp.Data.Repositories;
 using PersonalFinanceApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalFinanceApp.BusinessLogic
 {
     public class CategoryProcessor
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public CategoryProcessor(ICategoryRepository categoryRepository)
+        public CategoryProcessor(ICategoryRepository categoryRepository, ITransactionRepository transactionRepository, IAccountRepository accountRepository)
         {
             _categoryRepository = categoryRepository;
+            _transactionRepository = transactionRepository;
+            _accountRepository = accountRepository;
         }
 
         public async Task<List<Category>> GetAllCategory()
@@ -52,10 +51,23 @@ namespace PersonalFinanceApp.BusinessLogic
 
         public async Task<string> DeleteCategory(int id)
         {
-            var account = await _categoryRepository.GetCategoryById(id);
-            if (account == null)
+            var category = await _categoryRepository.GetCategoryById(id);
+            if (category == null)
             {
-                return "Ошибка: каттегория не найдена.";
+                return "Ошибка: категория не найдена.";
+            }
+
+            //получаем все транзакции с этой категорией
+            var transactions = (await _transactionRepository.GetAllTransactions())
+                .Where(t => t.Category_id == id)
+                .ToList();
+
+            foreach (var transaction in transactions)
+            {
+                //возвращаем сумму на счет
+                var account = await _accountRepository.GetAccountById(transaction.Account_id);
+                account.Balance += transaction.Type == "income" ? -transaction.Amount : transaction.Amount;
+                await _accountRepository.UpdateAccount(account);
             }
 
             await _categoryRepository.DeleteCategory(id);

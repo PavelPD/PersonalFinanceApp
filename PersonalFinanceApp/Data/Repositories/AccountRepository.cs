@@ -1,10 +1,5 @@
 ﻿using PersonalFinanceApp.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalFinanceApp.Data.Repositories
 {
@@ -29,11 +24,12 @@ namespace PersonalFinanceApp.Data.Repositories
             }
         }
 
-        public async Task<Account> GetAccountById(int id)
+        public async Task<Account?> GetAccountById(int id)
         {
             try
             {
-                return await _database.FindAsync<Account>(id);
+                var result = await _database.QueryAsync<Account>("SELECT * FROM Accounts WHERE id = ?", id);
+                return result.FirstOrDefault();
             }
             catch (Exception ex)
             {

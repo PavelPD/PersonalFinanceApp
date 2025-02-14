@@ -8,7 +8,6 @@ namespace PersonalFinanceApp
         public App()
         {
             InitializeComponent();
-
             MainPage = new AppShell();
         }
 
@@ -16,6 +15,9 @@ namespace PersonalFinanceApp
         {
             base.OnStart();
             await DBInitializer.InitializeDatabase();
+
+            var testConsole = new TestConsole();
+            await testConsole.RunTest();
         }
     }
 }

@@ -1,10 +1,4 @@
 ﻿using PersonalFinanceApp.Data.Repositories;
-using PersonalFinanceApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalFinanceApp.BusinessLogic
 {
@@ -36,30 +30,28 @@ namespace PersonalFinanceApp.BusinessLogic
         //Прирост средств за период с возможной фильтрацией
         public async Task<double> GetProfit(DateTime startDate, DateTime endDate, int? accountId = null, int? categoryId = null)
         {
-            var transactoins = await _transactionRepository.GetAllTransactions();
-            
             //фильтр по дате
-            var filteredTransactoins = transactoins
-                .Where(t => t.Date >= startDate && t.Date <= endDate);
+            var transactoins = (await _transactionRepository.GetAllTransactions())
+                .Where(t => t.Date >= startDate && t.Date <= endDate);               
             
             //если выбран счет, фильтруем по нему
             if (accountId.HasValue)
             {
-                filteredTransactoins = filteredTransactoins
-                    .Where(t => t.AccountId == accountId.Value);
+                transactoins = transactoins
+                    .Where(t => t.Account_id == accountId.Value);
             }
 
             //доходы
-            double income = filteredTransactoins
+            double income = transactoins
                 .Where(t => t.Type == "income")
                 .Sum(t => t.Amount);
 
             //расходы (если выбрана категория, фильтруем)
-            var expenseTransactoins = filteredTransactoins.Where(t => t.Type == "expense");
+            var expenseTransactoins = transactoins.Where(t => t.Type == "expense");
             if (categoryId.HasValue)
             {
                 expenseTransactoins = expenseTransactoins
-                    .Where(t => t.CategoryId == categoryId.Value);
+                    .Where(t => t.Category_id == categoryId.Value);
             }
 
             double expense = expenseTransactoins.Sum(t => t.Amount);
@@ -70,15 +62,13 @@ namespace PersonalFinanceApp.BusinessLogic
         //Группировка доходов и расходов по месяцам за последние N месяцев
         public async Task<List<(string Month, double Total)>> GetMonthlyTransactions(int monthsBack, string filterType)
         {
-            var transactoins = await _transactionRepository.GetAllTransactions();
-
             //фильтр по периоду и типу
-            var filteredTransactoins = transactoins
+            var transactoins = (await _transactionRepository.GetAllTransactions())
                 .Where(t => t.Date >= DateTime.Now.AddMonths(-monthsBack))
                 .Where(t => t.Type == filterType);           
 
             //группировка данных по месяцам
-            var result = filteredTransactoins
+            var result = transactoins
                 .GroupBy(t => new { t.Date.Year, t.Date.Month })
                 .Select(g => new
                 {
@@ -95,19 +85,18 @@ namespace PersonalFinanceApp.BusinessLogic
         //Получить траты по категориям за период с возможной фильтрацией по счету
         public async Task<Dictionary<string, double>> GetCategoryExpenses(DateTime startDate, DateTime endDate, int? accountId = null)
         {
-            var transactoins = await _transactionRepository.GetAllTransactions();
-
-            var filteredTransactoins = transactoins
+            //фильтр по дате
+            var transactoins = (await _transactionRepository.GetAllTransactions())
                 .Where(t => t.Type == "expense" && t.Date >= startDate && t.Date <= endDate);
 
             if (accountId.HasValue)
             {
-                filteredTransactoins = filteredTransactoins
-                    .Where(t => t.AccountId == accountId.Value);
+                transactoins = transactoins
+                    .Where(t => t.Account_id == accountId.Value);
             }
 
-            var result = filteredTransactoins
-                .GroupBy(t => t.CategoryId)
+            var result = transactoins
+                .GroupBy(t => t.Category_id)
                 .Select(g => new { CategoryID = g.Key, TotalSpent = (double)g.Sum(t => t.Amount) })
                 .ToDictionary(g => g.CategoryID.ToString(), g => g.TotalSpent);
 
