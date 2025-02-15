@@ -24,6 +24,18 @@ namespace PersonalFinanceApp.Data.Repositories
             }
         }
 
+        public async Task<List<Transaction>> GetExpenseTransactionByAccountId(int id)
+        {
+            try
+            {
+                return await _database.QueryAsync<Transaction>("SELECT * FROM Transactions WHERE account_id = ? AND type = 'expense'", id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ошибка при получении транзакции с ID {id}", ex);
+            }
+        }
+
         public async Task<Transaction?> GetTransactionById(int id)
         {
             try

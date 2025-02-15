@@ -6,10 +6,14 @@ namespace PersonalFinanceApp.BusinessLogic
     public class AccountProcessor
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly IBudgetRepository _budgetRepository;
 
-        public AccountProcessor(IAccountRepository accountRepository) 
+        public AccountProcessor(IAccountRepository accountRepository, ITransactionRepository transactionRepository, IBudgetRepository budgetRepository) 
         {
             _accountRepository = accountRepository;
+            _transactionRepository = transactionRepository;
+            _budgetRepository = budgetRepository;
         }
 
         public async Task<List<Account>> GetAllAccounts()
@@ -52,6 +56,24 @@ namespace PersonalFinanceApp.BusinessLogic
             if (account == null)
             {
                 return "Ошибка: счет не найден.";
+            }
+
+            var transactions = await _transactionRepository.GetExpenseTransactionByAccountId(id);
+
+
+            if (transactions.Any())
+            {
+                var budgets = await _budgetRepository.GetAllBudgets();
+
+                foreach (var transaction in transactions) 
+                {
+                    foreach (var budget in budgets.Where(b => b.Category_id == transaction.Category_id))
+                    {
+                        budget.Spent -= transaction.Amount;
+                        if (budget.Spent < 0) budget.Spent = 0;
+                        await _budgetRepository.UpdateBudget(budget);
+                    }
+                }
             }
 
             await _accountRepository.DeleteAccount(id);

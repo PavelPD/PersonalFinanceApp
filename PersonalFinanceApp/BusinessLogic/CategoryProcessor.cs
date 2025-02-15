@@ -61,13 +61,15 @@ namespace PersonalFinanceApp.BusinessLogic
             var transactions = (await _transactionRepository.GetAllTransactions())
                 .Where(t => t.Category_id == id)
                 .ToList();
-
-            foreach (var transaction in transactions)
+            if (transactions.Any())
             {
-                //возвращаем сумму на счет
-                var account = await _accountRepository.GetAccountById(transaction.Account_id);
-                account.Balance += transaction.Type == "income" ? -transaction.Amount : transaction.Amount;
-                await _accountRepository.UpdateAccount(account);
+                foreach (var transaction in transactions)
+                {
+                    //возвращаем сумму на счет
+                    var account = await _accountRepository.GetAccountById(transaction.Account_id);
+                    account.Balance += transaction.Type == "income" ? -transaction.Amount : transaction.Amount;
+                    await _accountRepository.UpdateAccount(account);
+                }
             }
 
             await _categoryRepository.DeleteCategory(id);
