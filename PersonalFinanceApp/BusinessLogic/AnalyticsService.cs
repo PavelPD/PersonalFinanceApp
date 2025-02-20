@@ -1,4 +1,5 @@
 ﻿using PersonalFinanceApp.Data.Repositories;
+using PersonalFinanceApp.Models;
 
 namespace PersonalFinanceApp.BusinessLogic
 {
@@ -6,11 +7,13 @@ namespace PersonalFinanceApp.BusinessLogic
     {
         private readonly ITransactionRepository _transactionRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public AnalyticsService(ITransactionRepository transactionRepository, IAccountRepository accountRepository)
+        public AnalyticsService(ITransactionRepository transactionRepository, IAccountRepository accountRepository, ICategoryRepository categoryRepository)
         {
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;
+            _categoryRepository = categoryRepository;
         }
 
         //Общий баланс
@@ -25,6 +28,16 @@ namespace PersonalFinanceApp.BusinessLogic
 
             var accounts = await _accountRepository.GetAllAccounts();
             return accounts.Sum(a => a.Balance);
+        }
+
+        public async Task<double> GetTransactionsAmountForMonth(DateTime transMonth, bool isIncome)
+        {
+            var type = isIncome ? "income" : "expense";
+            var result = (await _transactionRepository.GetAllTransactions())
+                .Where(t => t.Date.ToString("yyyy MMMM") == transMonth.ToString("yyyy MMMM") && t.Type == type)
+                .Sum(t => t.Amount);
+
+            return result;
         }
 
         //Прирост средств за период с возможной фильтрацией
@@ -83,11 +96,14 @@ namespace PersonalFinanceApp.BusinessLogic
         }
 
         //Получить траты по категориям за период с возможной фильтрацией по счету
-        public async Task<Dictionary<string, double>> GetCategoryExpenses(DateTime startDate, DateTime endDate, int? accountId = null)
+        public async Task<List<CategoryExpense>> GetCategoryExpenses(DateTime startDate, DateTime endDate, bool isIncome, int? accountId = null)
         {
+            var allMonthlyAmounts = await GetTransactionsAmountForMonth(startDate, isIncome);
+            string type = isIncome ? "income" : "expense";
+
             //фильтр по дате
             var transactoins = (await _transactionRepository.GetAllTransactions())
-                .Where(t => t.Type == "expense" && t.Date >= startDate && t.Date <= endDate);
+                .Where(t => t.Type == type && t.Date >= startDate && t.Date <= endDate);
 
             if (accountId.HasValue)
             {
@@ -95,10 +111,29 @@ namespace PersonalFinanceApp.BusinessLogic
                     .Where(t => t.Account_id == accountId.Value);
             }
 
-            var result = transactoins
+            var groupedTransactions = transactoins
                 .GroupBy(t => t.Category_id)
-                .Select(g => new { CategoryID = g.Key, TotalSpent = (double)g.Sum(t => t.Amount) })
-                .ToDictionary(g => g.CategoryID.ToString(), g => g.TotalSpent);
+                .Select(g => new {Category_id = g.Key, TotalSpent = (double)g.Sum(t => t.Amount)})
+                .OrderByDescending(g => g.TotalSpent)
+                .ToList();
+
+            var result = new List<CategoryExpense>();
+
+            foreach (var trans in groupedTransactions)
+            {
+                var category = await _categoryRepository.GetCategoryById(trans.Category_id);
+                if(category != null)
+                {
+                    result.Add(new CategoryExpense
+                    {
+                        Category_id = category.Id,
+                        Name = category.Name,
+                        Icon = category.Icon,
+                        Amount = trans.TotalSpent,
+                        Percentage = Math.Round((trans.TotalSpent / allMonthlyAmounts), 2)
+                    });
+                }
+            }            
 
             return result;
         }

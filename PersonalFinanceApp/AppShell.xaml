@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-    x:Class="PersonalFinanceApp.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:PersonalFinanceApp"
-    Shell.FlyoutBehavior="Disabled"
-    Title="PersonalFinanceApp">
+    x:Class="PersonalFinanceApp.AppShell"
+    xmlns:local="clr-namespace:PersonalFinanceApp.View">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <Tab Title="Главная" Icon="home_page.png">
+            <ShellContent Route="home" ContentTemplate="{DataTemplate local:HomePage}" />
+        </Tab>
+
+        <Tab Title="Транзакции" Icon="transactions.png">
+            <ShellContent  Route="transactions" ContentTemplate="{DataTemplate local:TransactionsPage}" />
+        </Tab>
+
+        <Tab Title="Создать транзакцию" Icon="add_transaction.png">
+            <ShellContent  Route="new_transaction" ContentTemplate="{DataTemplate local:NewTransactionPage}" />
+        </Tab>
+
+        <Tab Title="Бюджеты" Icon="budget_page.png">
+            <ShellContent  Route="budgets" ContentTemplate="{DataTemplate local:BudgetsPage}" />
+        </Tab>
+
+        <Tab Title="Настройки" Icon="settings.png">
+            <ShellContent  Route="settings" ContentTemplate="{DataTemplate local:SettingsPage}" />
+        </Tab>
+    </TabBar>
 
 </Shell>

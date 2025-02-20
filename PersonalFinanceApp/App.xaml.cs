@@ -1,14 +1,25 @@
-﻿using PersonalFinanceApp.Data;
+﻿using PersonalFinanceApp.BusinessLogic;
+using PersonalFinanceApp.Data;
+using PersonalFinanceApp.Data.Repositories;
+using PersonalFinanceApp.View;
 using System.Diagnostics;
 
 namespace PersonalFinanceApp
 {
     public partial class App : Application
     {
+        public static AnalyticsService analyticsService { get; private set; }
+
         public App()
         {
             InitializeComponent();
-            MainPage = new AppShell();
+
+            var transactionRepository = new TransactionRepository();
+            var accountRepository = new AccountRepository();
+            var categoryRepository = new CategoryRepository();
+
+            analyticsService = new AnalyticsService(transactionRepository, accountRepository, categoryRepository);
+            MainPage = new HomePage { BindingContext = analyticsService };
         }
 
         protected override async void OnStart()
@@ -16,8 +27,9 @@ namespace PersonalFinanceApp
             base.OnStart();
             await DBInitializer.InitializeDatabase();
 
-            var testConsole = new TestConsole();
-            await testConsole.RunTest();
+            //класс тестов
+            //var testConsole = new TestConsole();
+            //await testConsole.RunTest();
         }
     }
 }

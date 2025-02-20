@@ -35,7 +35,7 @@ namespace PersonalFinanceApp
             _budgetProcessor = new BudgetProcessor(budgetRepos, categoryRepos, transactionRepos);
 
             //аналитика
-            _analyticsService = new AnalyticsService(transactionRepos, accountRepos);
+            _analyticsService = new AnalyticsService(transactionRepos, accountRepos, categoryRepos);
 
             //чистим логи
             File.WriteAllText(LogFile, "LogFile\n");
@@ -56,13 +56,13 @@ namespace PersonalFinanceApp
             //await UpdateTransaction();
 
             //Log("\n=== тестирование удаления ===");
-            await DeleteTest();
+            //await DeleteTest();
 
             //Log("\n=== тестирование бюджета ===");
             //await BudgetTest();
 
             //Log("\n=== тестирование аналитики ===");
-            //await TestAnalytics();
+            //await TestAnalytics();            
         }
 
         #region тестирование счетов
@@ -86,17 +86,17 @@ namespace PersonalFinanceApp
             Log("Создание категорий...");
             var category = new Category
             {
-                Name = "транспорт",
-                Icon = "🚕",
-                Type = "expense"
+                Name = "Вклады",
+                Icon = "💵",
+                Type = "income"
             };
             await _categoryProcessor.AddCategory(category);
 
             //var category2 = new Category
             //{
-            //    Name = "ЗП",
-            //    Icon = "📂",
-            //    Type = "income"
+            //    Name = "Собака",
+            //    Icon = "🐶",
+            //    Type = "expense"
             //};
             //await _categoryProcessor.AddCategory(category2);
 
@@ -112,28 +112,28 @@ namespace PersonalFinanceApp
         #region тестирование транзакций
         private async Task TestTransaction()
         {
-            //Log("\nСоздание транзакций...");
+            Log("\nСоздание транзакций...");
             var transaction = new Transaction
             {
                 Type = "expense",
-                Amount = 3500,
-                Account_id = 16,
-                Category_id = 17,
-                Comment = "Вертолет",
+                Amount = 1800,
+                Account_id = 12,
+                Category_id = 22,
+                Comment = "Собаке",
                 Date = DateTime.Now
             };
             await _transactionProcessor.AddTransaction(transaction);
 
-            //var transaction2 = new Transaction
-            //{
-            //    Type = "income",
-            //    Amount = 9000,
-            //    Account_id = 14,
-            //    Category_id = 12,
-            //    Comment = "зп",
-            //    Date = DateTime.Now
-            //};
-            //await _transactionProcessor.AddTransaction(transaction2);
+            var transaction2 = new Transaction
+            {
+                Type = "expense",
+                Amount = 30000,
+                Account_id = 14,
+                Category_id = 19,
+                Comment = "квплата",
+                Date = DateTime.Now
+            };
+            await _transactionProcessor.AddTransaction(transaction2);
 
             await OutputTransaction();
 
@@ -241,7 +241,7 @@ namespace PersonalFinanceApp
             var transactions = await _transactionProcessor.GetAllTransaction();
             foreach (var t in transactions)
             {
-                Log($"- Кат: {t.Category_id}. Счет: {t.Account_id}\n{t.Type} {t.Amount} руб. {t.Comment}");
+                Log($"- Кат: {t.Category_id}. Счет: {t.Account_id} {t.Date}\n{t.Type} {t.Amount} руб. {t.Comment}");
             }
         }
 
