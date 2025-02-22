@@ -32,6 +32,42 @@ namespace PersonalFinanceApp.BusinessLogic
             }
         }
 
+        public async Task<List<TransactionViewModel>> GetAllTransactionViewModel(DateTime date)
+        {
+            try
+            {
+                var transactoins = (await _transactionRepository.GetAllTransactions())
+                    .Where(t => t.Date.ToString("yyyy MMMM") == date.ToString("yyyy MMMM"));
+
+                var result = new List<TransactionViewModel>();
+
+                foreach (var transaction in transactoins)
+                {
+                    var category = await _categoryRepository.GetCategoryById(transaction.Category_id);
+                    var account = await _accountRepository.GetAccountById(transaction.Account_id);
+
+                    result.Add(new TransactionViewModel
+                    {
+                        Transaction_id = transaction.Id,
+                        Type = transaction.Type,
+                        Amount = transaction.Amount,
+                        Comment = transaction.Comment,
+                        Date = transaction.Date,
+                        CategoryName = category.Name,
+                        CategoryIcon = category.Icon,
+                        AccountName = account.Name,
+                        AmountColor = transaction.Type == "income" ? "Green" : "#272727"                        
+                    });
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка при получении транзакций", ex);
+            }
+        }
+
         public async Task<string> AddTransaction(Transaction transaction)
         {
             if(transaction.Amount <= 0)

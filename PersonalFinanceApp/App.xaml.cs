@@ -8,7 +8,12 @@ namespace PersonalFinanceApp
 {
     public partial class App : Application
     {
-        public static AnalyticsService analyticsService { get; private set; }
+        public static AnalyticsService AnalyticsService { get; private set; }
+        public static TransactionProcessor TransactionProcessor { get; private set; }
+        public static AccountProcessor AccountProcessor { get; private set; }
+        public static CategoryProcessor CategoryProcessor { get; private set; }
+        public static BudgetProcessor BudgetProcessor { get; private set; }
+
 
         public App()
         {
@@ -17,9 +22,15 @@ namespace PersonalFinanceApp
             var transactionRepository = new TransactionRepository();
             var accountRepository = new AccountRepository();
             var categoryRepository = new CategoryRepository();
+            var budgetRepository = new BudgetRepository();
 
-            analyticsService = new AnalyticsService(transactionRepository, accountRepository, categoryRepository);
-            MainPage = new HomePage { BindingContext = analyticsService };
+            AnalyticsService = new AnalyticsService(transactionRepository, accountRepository, categoryRepository);
+            TransactionProcessor = new TransactionProcessor(transactionRepository, categoryRepository, accountRepository, budgetRepository);
+            AccountProcessor = new AccountProcessor(accountRepository, transactionRepository, budgetRepository);
+            CategoryProcessor = new CategoryProcessor(categoryRepository, transactionRepository, accountRepository);
+            BudgetProcessor = new BudgetProcessor(budgetRepository, categoryRepository, transactionRepository);            
+
+            MainPage = new AppShell();
         }
 
         protected override async void OnStart()

@@ -119,9 +119,9 @@ namespace PersonalFinanceApp.BusinessLogic
 
             var result = new List<CategoryExpense>();
 
-            foreach (var trans in groupedTransactions)
+            foreach (var transaction in groupedTransactions)
             {
-                var category = await _categoryRepository.GetCategoryById(trans.Category_id);
+                var category = await _categoryRepository.GetCategoryById(transaction.Category_id);
                 if(category != null)
                 {
                     result.Add(new CategoryExpense
@@ -129,8 +129,8 @@ namespace PersonalFinanceApp.BusinessLogic
                         Category_id = category.Id,
                         Name = category.Name,
                         Icon = category.Icon,
-                        Amount = trans.TotalSpent,
-                        Percentage = Math.Round((trans.TotalSpent / allMonthlyAmounts), 2)
+                        Amount = transaction.TotalSpent,
+                        Percentage = Math.Round((transaction.TotalSpent / allMonthlyAmounts), 2)
                     });
                 }
             }            

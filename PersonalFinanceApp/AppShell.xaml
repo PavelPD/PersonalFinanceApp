@@ -27,4 +27,6 @@
         </Tab>
     </TabBar>
 
+    <ShellContent Route="editTransaction" ContentTemplate="{DataTemplate local:EditTransactionPage}"/>
+
 </Shell>

@@ -56,18 +56,14 @@ public partial class HomePage : ContentPage
         IncomeButtonColor = MainBackground;
         IncomeTextColor = MainForeground;
 
-        BindingContextChanged += async (sender, adgs) =>
-        {
-            if (BindingContext is AnalyticsService analyticsService)
-            {
-                BindingContext = this;
-                _analyticsService = analyticsService;
-                await LoadData();
-            }
-        };
+        _analyticsService = App.AnalyticsService;
+        BindingContext = this;
+        LoadData();
+
+        EditTransactionPage.TransactionUpdated += (sender, ards) => LoadData();
     }
 
-    private async Task LoadData()
+    private async void LoadData()
     {
         if (_analyticsService == null) return;
         
@@ -97,7 +93,7 @@ public partial class HomePage : ContentPage
         foreach (var expense in expensesList)
         {
             CategoryExpenses.Add(expense);
-        }        
+        }
 
         OnPropertyChanged(nameof(Balance));
         OnPropertyChanged(nameof(PeriodGrowth));
@@ -105,7 +101,6 @@ public partial class HomePage : ContentPage
         OnPropertyChanged(nameof(TransactionAmountInMonth));
         OnPropertyChanged(nameof(AveragePerDay));
         OnPropertyChanged(nameof(SelectedMonth));
-        OnPropertyChanged(nameof(CategoryExpenses));
     }
 
     private void ChangeMonth(int offset)

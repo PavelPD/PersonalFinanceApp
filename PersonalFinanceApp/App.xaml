@@ -16,11 +16,11 @@
             </Style>
 
             <Style TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource MainForeground}"/>
-                <Setter Property="TextColor" Value="{StaticResource MainBackground}"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource MainBackground}"/>
+                <Setter Property="TextColor" Value="{StaticResource MainForeground}"/>
                 <Setter Property="CornerRadius" Value="10"/>
-                <Setter Property="FontSize" Value="15"/>
-                <Setter Property="Padding" Value="5"/>
+                <Setter Property="Padding" Value="2"/>
+                <Setter Property="FontSize" Value="14"/>
             </Style>
 
             <Style TargetType="Label">                
@@ -40,6 +40,15 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource MainForeground}"/>
                 <Setter Property="ProgressColor" Value="Green"/>                
             </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="TextColor" Value="{StaticResource MainBackground}"/>
+            </Style>
+
+            <ResourceDictionary>
+                <local:AmountConverter x:Key="AmountConverter"/>
+            </ResourceDictionary>
             
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Styles/Colors.xaml" />
