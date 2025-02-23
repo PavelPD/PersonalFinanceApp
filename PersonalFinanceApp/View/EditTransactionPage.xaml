@@ -2,10 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PersonalFinanceApp.View.EditTransactionPage"
-             Title="EditTransactionPage"
              BackgroundColor="{StaticResource MainForeground}">
     
-    <VerticalStackLayout Padding="20">
+    <VerticalStackLayout Padding="20" Spacing="5">
         
         <Grid ColumnDefinitions="*,Auto,Auto">
             <Button Command="{Binding CancelCommand}" Grid.Column="0" HorizontalOptions="Start" BackgroundColor="{StaticResource MainForeground}">
@@ -26,40 +25,38 @@
                 </Button.ImageSource>
             </Button>
         </Grid>
-        
-        <Label Text="{Binding transactionViewModel.Type}" FontSize="24" FontAttributes="Bold" Margin="0,10,0,10"/>
 
-        <Frame Margin="0,10,0,0" Padding="10">            
+        <Label Text="Editing transaction" FontSize="24" FontAttributes="Bold" Margin="0,0,0,10"/>
+
+        <Frame Padding="10">            
             <Grid ColumnDefinitions="Auto,*">
                 <Entry Text="{Binding transactionViewModel.Comment}"/>
                 <Label Text="комментарий" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
             </Grid>
         </Frame>
 
-        <Frame Margin="0,10,0,0" Padding="10">
+        <Frame Padding="10">
             <Grid ColumnDefinitions="Auto,*">
                 <Entry Text="{Binding transactionViewModel.Amount}" Keyboard="Numeric"/>
                 <Label Text="Сумма" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
             </Grid>
         </Frame>
 
-        <Frame Margin="0,10,0,0" Padding="10">
+        <Frame Padding="10">
             <Grid ColumnDefinitions="Auto,*">
-                <Picker ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" ItemDisplayBinding="{Binding Name}" 
-                        TextColor="{StaticResource MainBackground}"/>
+                <Picker ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" ItemDisplayBinding="{Binding Name}"/>
                 <Label Text="Категория" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
             </Grid>
         </Frame>
 
-        <Frame Margin="0,10,0,0" Padding="10">
+        <Frame Padding="10">
             <Grid ColumnDefinitions="Auto,*">
-                <Picker ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" ItemDisplayBinding="{Binding Name}"
-                        TextColor="{StaticResource MainBackground}"/>
+                <Picker ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" ItemDisplayBinding="{Binding Name}"/>
                 <Label Text="Счет" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
             </Grid>
         </Frame>
 
-        <Frame Margin="0,10,0,0" Padding="10">
+        <Frame Padding="10">
             <Grid ColumnDefinitions="Auto,*">
                 <DatePicker Date="{Binding transactionViewModel.Date}" TextColor="{StaticResource MainBackground}"/>
                 <Label Text="Дата" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>

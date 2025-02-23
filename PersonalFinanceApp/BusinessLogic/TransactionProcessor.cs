@@ -70,10 +70,8 @@ namespace PersonalFinanceApp.BusinessLogic
 
         public async Task<string> AddTransaction(Transaction transaction)
         {
-            if(transaction.Amount <= 0)
-            {
-                return "Ошибка: сумма транзакции должна быть больше 0.";
-            }
+            if(transaction.Amount < 0) return "Cумма не может быть отрицательной";
+            
                         
             var category = await _categoryRepository.GetCategoryById(transaction.Category_id);
             if (category == null)
@@ -96,11 +94,14 @@ namespace PersonalFinanceApp.BusinessLogic
             //обновляем баланс
             await UpdateAccountBalance(account, transaction.Amount, transaction.Type == "income");
 
-            return "Транзакция добавлена.";
+            return "OK";
         }
 
         public async Task<string> UpdateTransaction(Transaction transaction)
         {
+            if (transaction.Amount < 0) return "Сумма не может быть отрицательной";
+            if (!isNumeric(transaction.Amount)) return "Сумма должна сожержать тольо цифры";
+
             var categoryType = await _categoryRepository.GetCategoryById(transaction.Category_id);
             if (categoryType.Type != transaction.Type)
             {
@@ -122,10 +123,10 @@ namespace PersonalFinanceApp.BusinessLogic
             //обновляем счета
             await UpdateAccountOnTransactionUpdated(existingTransaction ,transaction);
 
-            //оюновляем в бд
+            //обновляем в бд
             await _transactionRepository.UpdateTransaction(transaction);
             
-            return "Транзакция обновлена";
+            return "OK";
         }
 
         public async Task<string> DeleteTransaction(int id)
@@ -268,6 +269,12 @@ namespace PersonalFinanceApp.BusinessLogic
                 double difference = newTransaction.Amount - oldTransaction.Amount;
                 await UpdateAccountBalance(account, difference, newTransaction.Type == "income");
             }
+        }
+
+        //проверка что сумма это число
+        private bool isNumeric(object value)
+        {
+            return double.TryParse(value.ToString(), out _);
         }
     }
 }

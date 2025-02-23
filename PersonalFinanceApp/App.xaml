@@ -43,9 +43,14 @@
 
             <Style TargetType="Entry">
                 <Setter Property="Background" Value="White"/>
+                <Setter Property="PlaceholderColor" Value="LightGray"/>
                 <Setter Property="TextColor" Value="{StaticResource MainBackground}"/>
             </Style>
 
+            <Style TargetType="Picker">
+                <Setter Property="TextColor" Value="{StaticResource MainBackground}"/>
+            </Style>
+            
             <ResourceDictionary>
                 <local:AmountConverter x:Key="AmountConverter"/>
             </ResourceDictionary>

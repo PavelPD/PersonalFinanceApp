@@ -60,12 +60,6 @@ public partial class EditTransactionPage : ContentPage
     }   
 	private async Task SaveTransaction()
 	{
-		if (transactionViewModel.Amount < 0)
-		{
-			await DisplayAlert("Ошибка", "Сумма не может быть отрицательной", "Ok");
-			return;
-		}
-
 		var updatedTransaction = new Transaction
 		{
 			Id = transactionViewModel.Transaction_id,
@@ -77,8 +71,14 @@ public partial class EditTransactionPage : ContentPage
 			Account_id = SelectedAccount.Id,
 		};
 
-		await _transactionProcessor.UpdateTransaction(updatedTransaction);
+		string result = await _transactionProcessor.UpdateTransaction(updatedTransaction);
 		
+		if (result != "OK")
+		{
+			await DisplayAlert("Ошибка", result, "ok");
+			return;
+		} 
+
 		TransactionUpdated?.Invoke(this, EventArgs.Empty);
 		await Navigation.PopModalAsync();
 	}

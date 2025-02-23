@@ -2,11 +2,67 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PersonalFinanceApp.View.NewTransactionPage"
-             Title="NewTransactionPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+             BackgroundColor="{StaticResource MainForeground}">
+    
+    <VerticalStackLayout>        
+        <Frame BackgroundColor="{StaticResource MainBackground}" CornerRadius="0" Margin="0" Padding="0" HeightRequest="45"/>
+
+        <VerticalStackLayout Margin="10,0,10,0" Padding="10" Spacing="5">
+            
+            <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,10">
+                <Label Text="Add Transaction" FontSize="24" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0"/>
+                <Button Text="Добавить" Command="{Binding AddTransactionCommand}" 
+                        HorizontalOptions="End" Padding="6" Grid.Column="1"/>
+            </Grid>
+
+            <Frame BackgroundColor="{StaticResource MainBackground}">
+                <Grid ColumnDefinitions="*,*">
+                    <Button Text="Expense" Command="{Binding SelectedExpensesCommand}" TextColor="{Binding ExpensesTextColor}" 
+                            BackgroundColor="{Binding ExpensesButtonColor}" Grid.Column="0"/>
+
+                    <Button Text="Income" Command="{Binding SelectedIncomeCommand}" TextColor="{Binding IncomeTextColor}" 
+                            BackgroundColor="{Binding IncomeButtonColor}" Grid.Column="1"/>
+                </Grid>
+            </Frame>            
+            
+            <Frame Padding="10">
+                <Grid ColumnDefinitions="*,*">                    
+                    <Entry Text="{Binding Comment}"/>
+                    <Label Text="комментарий" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
+                </Grid>
+            </Frame>
+
+            <Frame Padding="10">
+                <Grid ColumnDefinitions="*,*">
+                    <Entry Placeholder="сумма" Keyboard="Numeric" Text="{Binding Amount}"/>
+                    <Label Text="Сумма" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
+                </Grid>
+            </Frame>
+
+            <Frame Padding="10">
+                <Grid ColumnDefinitions="*,*">
+                    <Picker ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" 
+                            ItemDisplayBinding="{Binding Name}"/>
+
+                    <Label Text="Счет" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
+                </Grid>
+            </Frame>
+
+            <Frame Padding="10">
+                <Grid ColumnDefinitions="*,*">
+                    <Picker ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" 
+                            ItemDisplayBinding="{Binding Name}"/>
+
+                    <Label Text="Категория" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
+                </Grid>
+            </Frame>
+            
+            <Frame Padding="10">
+                <Grid ColumnDefinitions="Auto,*">
+                    <DatePicker Date="{Binding TransactionDate}" TextColor="{StaticResource MainBackground}"/>
+                    <Label Text="Дата" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
+                </Grid>
+            </Frame>
+        </VerticalStackLayout>
     </VerticalStackLayout>
 </ContentPage>

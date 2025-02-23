@@ -45,8 +45,16 @@
                                 <Label Text="{Binding CategoryIcon}" Margin="0,0,10,0" VerticalOptions="Center" Grid.Column="0"/>
 
                                 <Grid RowDefinitions="Auto,Auto" Grid.Column="1">
-                                    <Grid Grid.Row="0">                                    
-                                        <Label Text="{Binding CategoryName}"/>
+                                    <Grid Grid.Row="0">
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding CategoryName}" TextColor="{StaticResource MainBackground}"/>
+                                                    <Span Text=": " TextColor="{StaticResource MainBackground}"/>
+                                                    <Span Text="{Binding Comment}" TextColor="{StaticResource MainBackground}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
                                         <Label Text="{Binding Amount, Converter={StaticResource AmountConverter}}" TextColor="{Binding AmountColor}" HorizontalOptions="End"/>
                                     </Grid>
 

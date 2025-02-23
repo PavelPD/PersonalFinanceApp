@@ -34,8 +34,9 @@ public partial class TransactionsPage : ContentPage
         LoadTransactions();
 
         EditTransactionPage.TransactionUpdated += (sender, ards) => LoadTransactions();
-    }   
-    
+        NewTransactionPage.TransactionAdded += (sender, ards) => LoadTransactions();
+    }
+
     private async void LoadTransactions()
     {
         SelectedMonth = _currentDate.ToString("MMMM yyyy");

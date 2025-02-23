@@ -61,6 +61,7 @@ public partial class HomePage : ContentPage
         LoadData();
 
         EditTransactionPage.TransactionUpdated += (sender, ards) => LoadData();
+        NewTransactionPage.TransactionAdded += (sender, ards) => LoadData();
     }
 
     private async void LoadData()
