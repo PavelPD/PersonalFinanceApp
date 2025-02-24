@@ -2,7 +2,6 @@
 using PersonalFinanceApp.Data;
 using PersonalFinanceApp.Data.Repositories;
 using PersonalFinanceApp.View;
-using System.Diagnostics;
 
 namespace PersonalFinanceApp
 {
@@ -14,7 +13,6 @@ namespace PersonalFinanceApp
         public static CategoryProcessor CategoryProcessor { get; private set; }
         public static BudgetProcessor BudgetProcessor { get; private set; }
 
-
         public App()
         {
             InitializeComponent();
@@ -25,22 +23,20 @@ namespace PersonalFinanceApp
             var budgetRepository = new BudgetRepository();
 
             AnalyticsService = new AnalyticsService(transactionRepository, accountRepository, categoryRepository);
-            TransactionProcessor = new TransactionProcessor(transactionRepository, categoryRepository, accountRepository, budgetRepository);
-            AccountProcessor = new AccountProcessor(accountRepository, transactionRepository, budgetRepository);
+            TransactionProcessor = new TransactionProcessor(transactionRepository, categoryRepository, accountRepository);
+            AccountProcessor = new AccountProcessor(accountRepository);
             CategoryProcessor = new CategoryProcessor(categoryRepository, transactionRepository, accountRepository);
             BudgetProcessor = new BudgetProcessor(budgetRepository, categoryRepository, transactionRepository);            
 
-            MainPage = new AppShell();
+            MainPage = new LoadingPage();
+            InitializeApp();
         }
 
-        protected override async void OnStart()
+        protected async void InitializeApp()
         {
-            base.OnStart();
             await DBInitializer.InitializeDatabase();
 
-            //класс тестов
-            //var testConsole = new TestConsole();
-            //await testConsole.RunTest();
+            MainPage = new AppShell();
         }
     }
 }

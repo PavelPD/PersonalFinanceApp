@@ -1,6 +1,6 @@
 ﻿namespace PersonalFinanceApp.Models
 {
-    public class CategoryExpense
+    public class CategoryExpenseViewModel
     {
         public int Category_id { get; set; }
         public string Name { get; set; }

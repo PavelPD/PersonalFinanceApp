@@ -28,6 +28,7 @@
 
         <VerticalStackLayout Padding="10">
             <Label Text="Transactions" FontSize="24" FontAttributes="Bold"/>
+            
             <CollectionView ItemsSource="{Binding Transactions}" Margin="0,10,0,0" HeightRequest="530">
 
                 <CollectionView.ItemsLayout>

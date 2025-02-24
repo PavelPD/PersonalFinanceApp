@@ -9,15 +9,13 @@ namespace PersonalFinanceApp.BusinessLogic
         private readonly ITransactionRepository _transactionRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IAccountRepository _accountRepository;
-        private readonly IBudgetRepository _budgetRepository;
 
         public TransactionProcessor(ITransactionRepository transactionRepository, ICategoryRepository categoryRepository,
-            IAccountRepository accountRepository, IBudgetRepository budgetRepository)
+            IAccountRepository accountRepository)
         {
             _transactionRepository = transactionRepository;
             _categoryRepository = categoryRepository;
             _accountRepository = accountRepository;
-            _budgetRepository = budgetRepository;
         }
 
         public async Task<List<Transaction>> GetAllTransaction()
@@ -85,9 +83,6 @@ namespace PersonalFinanceApp.BusinessLogic
                 return "Указанного счета не существует";
             }
 
-            //обновляем бюджеты
-            await UpdateBudgetsOnTransactionAdded(transaction);
-
             //добавляем транзакцию в бд
             await _transactionRepository.AddTransaction(transaction);
 
@@ -116,10 +111,7 @@ namespace PersonalFinanceApp.BusinessLogic
 
             //оставляем тип оригинала
             transaction.Type = existingTransaction.Type;
-
-            //обновляем бюджеты
-            await UpdateBudgetsOnTransactionUpdated(existingTransaction, transaction);
-
+            
             //обновляем счета
             await UpdateAccountOnTransactionUpdated(existingTransaction ,transaction);
 
@@ -136,9 +128,6 @@ namespace PersonalFinanceApp.BusinessLogic
             {
                 return "Ошибка: транзакция не найдена.";
             }
-
-            //обновляем бюджеты
-            await UpdateBudgetsOnTransactionDeleted(transaction);
             
             var account = await _accountRepository.GetAccountById(transaction.Account_id);
             if (account != null)
@@ -157,91 +146,6 @@ namespace PersonalFinanceApp.BusinessLogic
         {
             account.Balance += isIncome ? amount : -amount;
             await _accountRepository.UpdateAccount(account);
-        }
-
-        //метод для обновления бюджетов при добавлении транзакции
-        private async Task UpdateBudgetsOnTransactionAdded(Transaction transaction)
-        {
-            var budgets = (await _budgetRepository.GetAllBudgets())
-                .Where(b => b.Category_id == transaction.Category_id)
-                .ToList();
-
-            if (budgets.Any())
-            {
-                foreach (var budget in budgets)
-                {
-                    budget.Spent += transaction.Amount;
-                    await _budgetRepository.UpdateBudget(budget);
-                }
-            }
-        }
-
-        //метод для обновления бюджетов при изменении транзакции
-        private async Task UpdateBudgetsOnTransactionUpdated(Transaction oldTransaction, Transaction newTransaction)
-        {
-            double difference = newTransaction.Amount - oldTransaction.Amount;
-
-            if (difference != 0)
-            {
-
-                var budgets = (await _budgetRepository.GetAllBudgets())
-                    .Where(b => b.Category_id == newTransaction.Category_id)
-                    .ToList();
-
-                if (budgets.Any())
-                {
-                    foreach (var budget in budgets)
-                    {
-                        budget.Spent += difference;
-                        if (budget.Spent < 0) budget.Spent = 0;
-                        await _budgetRepository.UpdateBudget(budget);
-                    }
-                }
-            }
-
-            if (oldTransaction.Category_id != newTransaction.Category_id)
-            {
-                await MoveTransactionBetweenBudgets(oldTransaction, newTransaction);
-            }                    
-        }
-
-        //метод для переноса суммы между бюджетами при изменении категории транзакции
-        private async Task MoveTransactionBetweenBudgets(Transaction oldTransaction, Transaction newTransaction)
-        {
-            var oldBudgets = (await _budgetRepository.GetAllBudgets())
-                    .Where(b => b.Category_id == oldTransaction.Category_id)
-                    .ToList();
-
-            foreach (var budget in oldBudgets)
-            {
-                budget.Spent -= oldTransaction.Amount;
-                if (budget.Spent < 0) budget.Spent = 0;
-                await _budgetRepository.UpdateBudget(budget);
-            }
-
-            var newBudgets = (await _budgetRepository.GetAllBudgets())
-                .Where(b => b.Category_id == newTransaction.Category_id)
-                .ToList();
-
-            foreach (var budget in newBudgets)
-            {
-                budget.Spent += newTransaction.Amount;
-                await _budgetRepository.UpdateBudget(budget);
-            }
-        }
-
-        //метод обновления бюджетов при удалении транзакции
-        private async Task UpdateBudgetsOnTransactionDeleted(Transaction transaction)
-        {
-            var budgets = (await _budgetRepository.GetAllBudgets())
-                    .Where(b => b.Category_id == transaction.Category_id)
-                    .ToList();
-            foreach(var budget in budgets)
-            {
-                budget.Spent -= transaction.Amount;
-                if (budget.Spent < 0) budget.Spent = 0;
-                await _budgetRepository.UpdateBudget(budget);
-            }
         }
 
         //метод обновления счетов при изменении транзакции

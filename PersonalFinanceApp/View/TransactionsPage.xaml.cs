@@ -1,7 +1,6 @@
 using PersonalFinanceApp.BusinessLogic;
 using PersonalFinanceApp.Models;
 using System.Collections.ObjectModel;
-using System.Runtime.ConstrainedExecution;
 using System.Windows.Input;
 
 
@@ -33,8 +32,8 @@ public partial class TransactionsPage : ContentPage
         BindingContext = this;
         LoadTransactions();
 
-        EditTransactionPage.TransactionUpdated += (sender, ards) => LoadTransactions();
-        NewTransactionPage.TransactionAdded += (sender, ards) => LoadTransactions();
+        EditTransactionPage.TransactionUpdated += (s, e) => LoadTransactions();
+        NewTransactionPage.TransactionAdded += (s, e) => LoadTransactions();
     }
 
     private async void LoadTransactions()

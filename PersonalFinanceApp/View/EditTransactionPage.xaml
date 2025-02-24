@@ -26,7 +26,7 @@
             </Button>
         </Grid>
 
-        <Label Text="Editing transaction" FontSize="24" FontAttributes="Bold" Margin="0,0,0,10"/>
+        <Label Text="Editing transaction" FontSize="24" FontAttributes="Bold" Margin="0,20,0,10"/>
 
         <Frame Padding="10">            
             <Grid ColumnDefinitions="Auto,*">

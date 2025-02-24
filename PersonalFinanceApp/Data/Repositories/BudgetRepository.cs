@@ -41,8 +41,8 @@ namespace PersonalFinanceApp.Data.Repositories
         {
             try
             {
-                await _database.ExecuteAsync("INSERT INTO Budgets (name, category_id, amount, spent, month, year) VALUES (?, ?, ?, ?, ?, ?)",
-                    budget.Name, budget.Category_id, budget.Amount, budget.Spent, budget.Month, budget.Year);
+                await _database.ExecuteAsync("INSERT INTO Budgets (name, category_id, amount) VALUES (?, ?, ?)",
+                    budget.Name, budget.Category_id, budget.Amount);
             }
             catch (Exception ex)
             {
@@ -54,8 +54,8 @@ namespace PersonalFinanceApp.Data.Repositories
         {
             try
             {
-                await _database.ExecuteAsync("UPDATE Budgets SET name = ?, category_id = ?, amount = ?, spent = ?, month = ?, year = ? WHERE id = ?",
-                    budget.Name, budget.Category_id, budget.Amount, budget.Spent, budget.Month, budget.Year, budget.Id);
+                await _database.ExecuteAsync("UPDATE Budgets SET name = ?, category_id = ?, amount = ? WHERE id = ?",
+                    budget.Name, budget.Category_id, budget.Amount, budget.Id);
             }
             catch (Exception ex)
             {

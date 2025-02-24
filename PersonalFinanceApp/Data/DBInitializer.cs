@@ -1,10 +1,4 @@
 ﻿using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace PersonalFinanceApp.Data
 {
@@ -61,11 +55,39 @@ namespace PersonalFinanceApp.Data
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT,
                     category_id INTEGER NOT NULL,
-                    amount REAL NOT NULL,
-                    spent REAL NOT NULL DEFAULT 0,
-                    month INTEGER NOT NULL,
-                    year INTEGER NOT NULL,
+                    amount REAL NOT NULL,                   
                     FOREIGN KEY (category_id) REFERENCES Categories(id) ON DELETE CASCADE);
+            ");
+
+            // Добавляем начальные данные (если их еще нет)
+            await AddInitialData(connection);
+        }
+
+        private static async Task AddInitialData(SQLiteAsyncConnection connection)
+        {
+            // Добавляем категории и счет по умолчанию
+            await connection.ExecuteAsync(@"
+                INSERT INTO Categories (name, type, icon)
+                SELECT 'Доход', 'income', '💰'
+                WHERE NOT EXISTS (SELECT 1 FROM Categories WHERE name = 'Доход');
+            ");
+
+            await connection.ExecuteAsync(@"
+                INSERT INTO Categories (name, type, icon)
+                SELECT 'Продукты', 'expense', '🛒'
+                WHERE NOT EXISTS (SELECT 1 FROM Categories WHERE name = 'Продукты');
+            ");
+
+            await connection.ExecuteAsync(@"
+                INSERT INTO Categories (name, type, icon)
+                SELECT 'Развлечения', 'expense', '🎮'
+                WHERE NOT EXISTS (SELECT 1 FROM Categories WHERE name = 'Развлечения');
+            ");
+
+            await connection.ExecuteAsync(@"
+                 INSERT INTO Accounts (name, balance)
+                SELECT 'Основной', 10000
+                WHERE NOT EXISTS (SELECT 1 FROM Accounts WHERE name = 'Основной');
             ");
         }
     }

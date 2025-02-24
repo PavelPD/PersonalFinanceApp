@@ -1,6 +1,5 @@
 ﻿using PersonalFinanceApp.Data.Repositories;
 using PersonalFinanceApp.Models;
-using SQLitePCL;
 
 namespace PersonalFinanceApp.BusinessLogic
 {
@@ -22,9 +21,38 @@ namespace PersonalFinanceApp.BusinessLogic
             return await _budgetRepository.GetAllBudgets();
         }
 
+        public async Task<List<BudgetsViewModel>> GetAllBudgetWithSpent()
+        {
+            var currentMonth = DateTime.Now.Month;
+
+            var budgets = await _budgetRepository.GetAllBudgets();
+            var transactionsForCurrentMonth = (await _transactionRepository.GetAllTransactions())
+                .Where(t => t.Date.Month == currentMonth && t.Type == "expense");
+
+            var result = new List<BudgetsViewModel>();
+
+            foreach ( var budget in budgets )
+            {
+                var category = await _categoryRepository.GetCategoryById(budget.Category_id);
+                var spent = transactionsForCurrentMonth.Where(t => t.Category_id == category.Id).Sum(t => t.Amount);
+
+                result.Add(new BudgetsViewModel 
+                {
+                    Budgets_id = budget.Id,
+                    Name = budget.Name,
+                    Icon = category.Icon,
+                    Category_id = category.Id,
+                    Amount = budget.Amount,
+                    Spent = spent
+                });
+            }
+
+            return result;
+        }
+
         public async Task<string> AddBudget(Budget budget)
         {
-            if (budget.Amount <= 0) return "Сумма бюджета должна быть больше 0.";
+            if (budget.Amount <= 0) return "Сумма бюджета должна быть больше 0";
 
             var categury = await _categoryRepository.GetCategoryById(budget.Category_id);
             if(categury.Type != "expense")
@@ -32,16 +60,8 @@ namespace PersonalFinanceApp.BusinessLogic
                 return "Ошибка бюджет можно назначить только на категорию расходов.";
             }
 
-            //Расчет потраченных средсв по категории
-            budget.Spent = (await _transactionRepository.GetAllTransactions())
-                .Where(t => t.Category_id == budget.Category_id)
-                .Sum(t => t.Amount);
-
-            budget.Month = DateTime.Now.Month;
-            budget.Year = DateTime.Now.Year;
-
             await _budgetRepository.AddBudget(budget);
-            return "Бюджет добавлен.";
+            return "OK";
         }
 
         public async Task<string> UpdateBudget(Budget budget)
@@ -52,25 +72,16 @@ namespace PersonalFinanceApp.BusinessLogic
                 return "Ошибка: бюджет не найден.";
             }
 
+            if (budget.Amount <= 0) return "Сумма бюджета должна быть больше 0";
+
             var categury = await _categoryRepository.GetCategoryById(budget.Category_id);
             if (categury.Type != "expense")
             {
                 return "Ошибка: бюджет можно назначить только на категорию расходов.";
             }
 
-            //если измениласт категория пересчитываем spent
-            if (existingBudget.Category_id != budget.Category_id)
-            {
-                budget.Spent = (await _transactionRepository.GetAllTransactions())
-                    .Where(t => t.Category_id == budget.Category_id)
-                    .Sum(t => t.Amount);
-            }
-
-            budget.Month = DateTime.Now.Month;
-            budget.Year = DateTime.Now.Year;
-
             await _budgetRepository.UpdateBudget(budget);
-            return "Бюджет обновлен.";
+            return "OK";
         }
 
         public async Task<string> DeleteBudget(int id)

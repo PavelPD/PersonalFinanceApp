@@ -9,9 +9,9 @@ namespace PersonalFinanceApp.View;
 
 public partial class HomePage : ContentPage
 {
-    public ObservableCollection<CategoryExpense> CategoryExpenses { get; set; }
+    public ObservableCollection<CategoryExpenseViewModel> CategoryExpenses { get; set; }
     
-    private AnalyticsService _analyticsService;
+    private readonly AnalyticsService _analyticsService;
 
     private DateTime _currentDate = DateTime.Now;
 
@@ -40,8 +40,9 @@ public partial class HomePage : ContentPage
     public HomePage()
 	{
         InitializeComponent();
+        _analyticsService = App.AnalyticsService;
 
-        CategoryExpenses = new ObservableCollection<CategoryExpense>();
+        CategoryExpenses = new ObservableCollection<CategoryExpenseViewModel>();
 
         PreviousMonthCommand = new Command(() => ChangeMonth(-1));
         NextMonthCommand = new Command(() => ChangeMonth(1));
@@ -56,7 +57,6 @@ public partial class HomePage : ContentPage
         IncomeButtonColor = MainBackground;
         IncomeTextColor = MainForeground;
 
-        _analyticsService = App.AnalyticsService;
         BindingContext = this;
         LoadData();
 

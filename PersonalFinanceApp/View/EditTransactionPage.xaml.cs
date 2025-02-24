@@ -38,9 +38,8 @@ public partial class EditTransactionPage : ContentPage
         DeleteCommand = new Command(async () => await DeleteTransaction());
         CancelCommand = new Command(async () => Navigation.PopModalAsync());
 
-		LoadData();
-
 		BindingContext = this;
+		LoadData();
 	}
 
     private async void LoadData()

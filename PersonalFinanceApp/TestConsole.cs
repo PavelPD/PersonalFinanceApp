@@ -30,8 +30,8 @@ namespace PersonalFinanceApp
 
             //процессоры
             _categoryProcessor = new CategoryProcessor(categoryRepos, transactionRepos, accountRepos);
-            _transactionProcessor = new TransactionProcessor(transactionRepos, categoryRepos, accountRepos, budgetRepos);
-            _accountProcessor = new AccountProcessor(accountRepos, transactionRepos, budgetRepos);
+            _transactionProcessor = new TransactionProcessor(transactionRepos, categoryRepos, accountRepos);
+            _accountProcessor = new AccountProcessor(accountRepos);
             _budgetProcessor = new BudgetProcessor(budgetRepos, categoryRepos, transactionRepos);
 
             //аналитика
@@ -211,8 +211,7 @@ namespace PersonalFinanceApp
                 Id = 4,
                 Name = "Дом",
                 Category_id = 18,
-                Amount = 10000,
-                Spent = 0
+                Amount = 10000
             };
             await _budgetProcessor.UpdateBudget(budget);
 
@@ -251,7 +250,7 @@ namespace PersonalFinanceApp
             var budgets = await _budgetProcessor.GetAllBudget();
             foreach (var b in budgets)
             {
-                Log($"- Кат. {b.Category_id} Имя: {b.Name}\nspent {b.Spent} amount {b.Amount}");
+                Log($"- Кат. {b.Category_id} Имя: {b.Name}\namount {b.Amount}");
             }
         }
     }

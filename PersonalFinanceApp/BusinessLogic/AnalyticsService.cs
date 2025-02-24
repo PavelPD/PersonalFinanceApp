@@ -96,7 +96,7 @@ namespace PersonalFinanceApp.BusinessLogic
         }
 
         //Получить траты по категориям за период с возможной фильтрацией по счету
-        public async Task<List<CategoryExpense>> GetCategoryExpenses(DateTime startDate, DateTime endDate, bool isIncome, int? accountId = null)
+        public async Task<List<CategoryExpenseViewModel>> GetCategoryExpenses(DateTime startDate, DateTime endDate, bool isIncome, int? accountId = null)
         {
             var allMonthlyAmounts = await GetTransactionsAmountForMonth(startDate, isIncome);
             string type = isIncome ? "income" : "expense";
@@ -117,14 +117,14 @@ namespace PersonalFinanceApp.BusinessLogic
                 .OrderByDescending(g => g.TotalSpent)
                 .ToList();
 
-            var result = new List<CategoryExpense>();
+            var result = new List<CategoryExpenseViewModel>();
 
             foreach (var transaction in groupedTransactions)
             {
                 var category = await _categoryRepository.GetCategoryById(transaction.Category_id);
                 if(category != null)
                 {
-                    result.Add(new CategoryExpense
+                    result.Add(new CategoryExpenseViewModel
                     {
                         Category_id = category.Id,
                         Name = category.Name,
