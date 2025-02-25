@@ -84,7 +84,10 @@ public partial class EditTransactionPage : ContentPage
 
     private async Task DeleteTransaction()
     {
-		await _transactionProcessor.DeleteTransaction(transactionViewModel.Transaction_id);
+        bool confirm = await DisplayAlert("Удаление", "Вы действительно хотите удалить транзакцию?", "Да", "Нет");
+        if (!confirm) return;
+
+        await _transactionProcessor.DeleteTransaction(transactionViewModel.Transaction_id);
 
         TransactionUpdated?.Invoke(this, EventArgs.Empty); 
 		await Navigation.PopModalAsync();

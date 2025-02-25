@@ -18,7 +18,7 @@ public partial class EditBudgetPage : ContentPage
 
 
     public ICommand SaveCommand { get; set; }
-    public ICommand DeleteCommad { get; set; }
+    public ICommand DeleteCommand { get; set; }
     public ICommand CancelCommand { get; }
 
 
@@ -31,7 +31,7 @@ public partial class EditBudgetPage : ContentPage
 		Budget = budget;
 
 		SaveCommand = new Command(async () => await SaveBudget());
-		DeleteCommad = new Command(async () => await DeleteBudget());
+		DeleteCommand = new Command(async () => await DeleteBudget());
         CancelCommand = new Command(async () => await Navigation.PopModalAsync());
 
         BindingContext = this;

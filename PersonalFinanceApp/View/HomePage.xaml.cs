@@ -47,8 +47,6 @@ public partial class HomePage : ContentPage
         PreviousMonthCommand = new Command(() => ChangeMonth(-1));
         NextMonthCommand = new Command(() => ChangeMonth(1));
 
-        ChartSwitchCommand = new Command(() => ToggleExpensesIncome(!IsIncomeSelected));
-
         ShowExpensesCommand = new Command(() => ToggleExpensesIncome(false));
         ShowIncomeCommand = new Command(() => ToggleExpensesIncome(true));
 
@@ -60,8 +58,12 @@ public partial class HomePage : ContentPage
         BindingContext = this;
         LoadData();
 
-        EditTransactionPage.TransactionUpdated += (sender, ards) => LoadData();
-        NewTransactionPage.TransactionAdded += (sender, ards) => LoadData();
+        EditTransactionPage.TransactionUpdated += (s, e) => LoadData();
+        NewTransactionPage.TransactionAdded += (s, e) => LoadData();
+        AddAccountPage.AccountAdded += (s, e) => LoadData();
+        EditAccountPage.AccountUpdated += (s, e) => LoadData();
+        EditCategoryPage.CategoryUpdated += (s, e) => LoadData();
+        SettingsPage.DbRest += (s, e) => LoadData();
     }
 
     private async void LoadData()

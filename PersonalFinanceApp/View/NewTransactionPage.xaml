@@ -7,17 +7,19 @@
     <VerticalStackLayout Margin="10,0,10,0" Padding="10" Spacing="5">
             
         <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,10">
-            <Label Text="Add Transaction" FontSize="24" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0"/>
-            <Button Text="Добавить" Command="{Binding AddTransactionCommand}" 
-                    HorizontalOptions="End" Padding="6" Grid.Column="1"/>
+            <Label Text="Добавить транзакцию" FontSize="24" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0"/>
+            <Frame HorizontalOptions="End" BackgroundColor="{StaticResource MainForeground}" 
+                   BorderColor="{StaticResource MainBackground}" Padding="2" Grid.Column="1">
+                <Button Text="Добавить" Command="{Binding AddTransactionCommand}"/>                
+            </Frame>
         </Grid>
 
-        <Frame BackgroundColor="{StaticResource MainBackground}">
+        <Frame CornerRadius="12" Padding="1" BackgroundColor="{StaticResource MainBackground}">
             <Grid ColumnDefinitions="*,*">
-                <Button Text="Expense" Command="{Binding SelectedExpensesCommand}" TextColor="{Binding ExpensesTextColor}" 
+                <Button Text="Расход" Command="{Binding SelectedExpensesCommand}" TextColor="{Binding ExpensesTextColor}" 
                         BackgroundColor="{Binding ExpensesButtonColor}" Grid.Column="0"/>
 
-                <Button Text="Income" Command="{Binding SelectedIncomeCommand}" TextColor="{Binding IncomeTextColor}" 
+                <Button Text="Доход" Command="{Binding SelectedIncomeCommand}" TextColor="{Binding IncomeTextColor}" 
                         BackgroundColor="{Binding IncomeButtonColor}" Grid.Column="1"/>
             </Grid>
         </Frame>            
@@ -31,7 +33,7 @@
 
         <Frame Padding="10">
             <Grid ColumnDefinitions="*,*">
-                <Entry Placeholder="сумма" Keyboard="Numeric" Text="{Binding Amount}"/>
+                <Entry Placeholder="0" Keyboard="Numeric" Text="{Binding Amount}"/>
                 <Label Text="Сумма" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
             </Grid>
         </Frame>

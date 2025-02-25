@@ -4,11 +4,13 @@
              x:Class="PersonalFinanceApp.View.HomePage"             
              BackgroundColor="{StaticResource MainForeground}">
 
-    <VerticalStackLayout>
+    <ScrollView>        
+        <VerticalStackLayout>
         <!--Фильтр по месяцу-->
         <Frame BackgroundColor="{StaticResource MainBackground}" CornerRadius="0" Margin="0" Padding="0" HeightRequest="45">            
             <Grid ColumnDefinitions="Auto,*,Auto" HorizontalOptions="Center">
-                <Button VerticalOptions="Center" Grid.Column="0" Command="{Binding PreviousMonthCommand}" >
+                <Button VerticalOptions="Center" Grid.Column="0" Command="{Binding PreviousMonthCommand}" 
+                        BackgroundColor="{StaticResource MainBackground}" TextColor="{StaticResource MainForeground}">
                     <Button.ImageSource>
                         <FileImageSource File="arrow_left.png"/>
                     </Button.ImageSource>
@@ -17,7 +19,8 @@
                 <Label Text="{Binding SelectedMonth}" TextColor="{StaticResource MainForeground}"
                        VerticalOptions="Center" HorizontalTextAlignment="Center" Margin="10,0,10,0" Grid.Column="1"/>
 
-                <Button Command="{Binding NextMonthCommand}" VerticalOptions="Center" Grid.Column="2">
+                <Button Command="{Binding NextMonthCommand}" VerticalOptions="Center" Grid.Column="2"
+                        BackgroundColor="{StaticResource MainBackground}" TextColor="{StaticResource MainForeground}">
                     <Button.ImageSource>
                         <FileImageSource File="arrow_right.png"/>
                     </Button.ImageSource>
@@ -26,16 +29,16 @@
         </Frame>                
     
         <VerticalStackLayout Padding="10">
-            
-            <Label Text="Statistic" FontSize="24" FontAttributes="Bold"  Margin="0,0,0,10"/>            
+
+            <Label Text="Статистика" FontSize="24" FontAttributes="Bold"  Margin="0,0,0,10"/>            
 
             <!--Переключатель Expenses / Income-->
-            <Frame CornerRadius="10" BackgroundColor="{StaticResource MainBackground}">
+            <Frame CornerRadius="10" Padding="1" BackgroundColor="{StaticResource MainBackground}">
                 <Grid ColumnDefinitions="*,*">
-                    <Button Text="Expenses" Command="{Binding ShowExpensesCommand}" Grid.Column ="0"
+                    <Button Text="Расходы" Command="{Binding ShowExpensesCommand}" Grid.Column ="0"
                         BackgroundColor="{Binding ExpensesButtonColor}" TextColor="{Binding ExpensesTextColor}"/>
 
-                    <Button Text="Income" Command="{Binding ShowIncomeCommand}" Grid.Column ="1"
+                    <Button Text="Доходы" Command="{Binding ShowIncomeCommand}" Grid.Column ="1"
                         BackgroundColor="{Binding IncomeButtonColor}" TextColor="{Binding IncomeTextColor}"/>
                 </Grid>
             </Frame>               
@@ -44,14 +47,14 @@
             <Grid ColumnDefinitions="*,*" >
                 <Frame Margin="0,10,5,10" HeightRequest="76" Padding="10" Grid.Column="0">
                     <Grid RowDefinitions="Auto,*">
-                        <Label Text="Balance" FontSize="14" Grid.Row="0"/>
+                        <Label Text="Баланс" FontSize="14" Grid.Row="0"/>
                         <Label Text="{Binding Balance, Converter={StaticResource AmountConverter}}" FontAttributes="Bold" FontSize="20" VerticalOptions="End" Grid.Row="1"/>
                     </Grid>
                 </Frame>
 
                 <Frame Margin="5,10,0,10" HeightRequest="76" Padding="10" Grid.Column="1">
                     <Grid RowDefinitions="Auto,*">
-                        <Label Text="Period Growth" FontSize="14" Grid.Row="0"/>
+                        <Label Text="Прирост средств" FontSize="14" Grid.Row="0"/>
                         <Label Text="{Binding PeriodGrowth, Converter={StaticResource AmountConverter}}" FontAttributes="Bold" FontSize="20" TextColor="Green" VerticalOptions="End" Grid.Row="1"/>
                     </Grid>
                 </Frame>
@@ -77,7 +80,7 @@
             </Frame>
 
             <!--Траты по категориям-->
-            <CollectionView ItemsSource="{Binding CategoryExpenses}" Margin="0,10,0,0" HeightRequest="300">
+            <CollectionView ItemsSource="{Binding CategoryExpenses}" Margin="0,10,0,0" HorizontalScrollBarVisibility="Never">
 
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="3"/>
@@ -89,7 +92,7 @@
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame HeightRequest="55" Padding="10">
+                        <Frame CornerRadius="12" Padding="10">
                             <Grid ColumnDefinitions="Auto,*">
                                 <Label Text="{Binding Icon}" WidthRequest="24" HeightRequest="24" Margin="0,0,10,0"/>
 
@@ -114,4 +117,5 @@
             </CollectionView>
         </VerticalStackLayout>
     </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

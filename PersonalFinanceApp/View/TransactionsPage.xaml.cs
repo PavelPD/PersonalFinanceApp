@@ -34,6 +34,9 @@ public partial class TransactionsPage : ContentPage
 
         EditTransactionPage.TransactionUpdated += (s, e) => LoadTransactions();
         NewTransactionPage.TransactionAdded += (s, e) => LoadTransactions();
+        EditAccountPage.AccountUpdated += (s, e) => LoadTransactions();
+        EditCategoryPage.CategoryUpdated += (s, e) => LoadTransactions();
+        SettingsPage.DbRest += (s, e) => LoadTransactions();
     }
 
     private async void LoadTransactions()

@@ -26,15 +26,17 @@ namespace PersonalFinanceApp.BusinessLogic
             //проверка на пустое имя
             if (string.IsNullOrWhiteSpace(category.Name)) 
             {
-                return "Ошибка: имя категории не может быть пустым.";
+                return "Имя категории не может быть пустым";
             }
 
             await _categoryRepository.AddCategory(category);
-            return "Категория добавлена.";
+            return "OK";
         }
 
-        public async Task<string> UpdateCategoryt(Category category)
+        public async Task<string> UpdateCategory(Category category)
         {
+            if (string.IsNullOrWhiteSpace(category.Name)) return "Введите название категории";            
+
             var existingCategory = await _categoryRepository.GetCategoryById(category.Id);
             if (existingCategory == null)
             {
@@ -46,7 +48,7 @@ namespace PersonalFinanceApp.BusinessLogic
             existingCategory.Icon = category.Icon;
 
             await _categoryRepository.UpdateCategory(existingCategory);
-            return "Категория обновлена.";
+            return "OK";
         }
 
         public async Task<string> DeleteCategory(int id)
@@ -73,7 +75,7 @@ namespace PersonalFinanceApp.BusinessLogic
             }
 
             await _categoryRepository.DeleteCategory(id);
-            return "Категория удалена.";
+            return "OK";
         }
     }
 }

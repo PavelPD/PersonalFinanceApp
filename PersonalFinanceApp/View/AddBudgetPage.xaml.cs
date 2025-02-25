@@ -30,7 +30,6 @@ public partial class AddBudgetPage : ContentPage
 		SaveCommand = new Command(async () => await SaveBudget());
 		CancelCommand = new Command(async () => await Navigation.PopModalAsync());
 
-
 		LoadData();
 		BindingContext = this;
 	}

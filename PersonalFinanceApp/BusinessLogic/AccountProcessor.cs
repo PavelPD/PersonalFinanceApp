@@ -22,12 +22,7 @@ namespace PersonalFinanceApp.BusinessLogic
             //проверка на пустое имя
             if (string.IsNullOrWhiteSpace(account.Name)) 
             {
-                return "Ошибка: имя счета не может быть пустым.";
-            }
-
-            if(account.Balance < 0)
-            {
-                return "Ошибка: баланс счета не может быть отрицательным.";
+                return "Имя счета не может быть пустым";
             }
 
             await _accountRepository.AddAccount(account);
@@ -36,6 +31,11 @@ namespace PersonalFinanceApp.BusinessLogic
 
         public async Task<string> UpdateAccount(Account account)
         {
+            if (string.IsNullOrWhiteSpace(account.Name))
+            {
+                return "Имя счета не может быть пустым";
+            }
+
             var existingAccount = await _accountRepository.GetAccountById(account.Id);
             if (existingAccount == null)
             {
@@ -43,7 +43,7 @@ namespace PersonalFinanceApp.BusinessLogic
             }
 
             await _accountRepository.UpdateAccount(account);
-            return "Счет обновлен.";
+            return "OK";
         }
 
         public async Task<string> DeleteAccount(int id)
@@ -55,7 +55,7 @@ namespace PersonalFinanceApp.BusinessLogic
             }            
 
             await _accountRepository.DeleteAccount(id);
-            return "Счет удален.";
+            return "OK";
         }
     }
 }

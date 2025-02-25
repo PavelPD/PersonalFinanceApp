@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PersonalFinanceApp.View.AccountsPage"
+             x:Name="AccountsPageView"
+             BackgroundColor="{StaticResource MainForeground}">
+
+    <VerticalStackLayout Padding="20" Spacing="5">
+        
+        <Grid ColumnDefinitions="*,*">
+            <Frame Grid.Column="0" HorizontalOptions="Start" BackgroundColor="{StaticResource MainForeground}" 
+           BorderColor="{StaticResource MainBackground}" Padding="2">
+                <Button Text="назад" Command="{Binding CancelCommand}"/>
+            </Frame>
+
+            <Frame Grid.Column="1" HorizontalOptions="End" BackgroundColor="{StaticResource MainForeground}" 
+           BorderColor="{StaticResource MainBackground}" Padding="2">
+                <Button Text="Добавить счет" Command="{Binding AddAccountCommand}"/>
+            </Frame>
+        </Grid>
+        
+        <Label Text="Счета" FontSize="24" FontAttributes="Bold" Margin="0,10"/>
+
+        <CollectionView ItemsSource="{Binding Accounts}">
+            
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="3"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.EmptyView>
+                <Label Text="Создайте новый счет" TextColor="Gray"/>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Text="{Binding Name}"/>
+                            <Label Text="{Binding Balance, Converter={StaticResource AmountConverter}}" HorizontalOptions="End" TextColor="LightGray" Grid.Column="1"/>
+                        </Grid>
+                        
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference AccountsPageView}, Path=BindingContext.EditAccountCommand}" CommandParameter="{Binding}"/>
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>

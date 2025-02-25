@@ -92,7 +92,7 @@ namespace PersonalFinanceApp.BusinessLogic
                 return "Ошибка: бюджет не найден.";
             }
             await _budgetRepository.DeleteBudget(id);
-            return "Бюджет удален.";
+            return "OK";
         }
     }
 }

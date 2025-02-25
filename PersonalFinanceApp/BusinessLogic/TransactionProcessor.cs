@@ -138,7 +138,7 @@ namespace PersonalFinanceApp.BusinessLogic
 
             //удаляеь в бд
             await _transactionRepository.DeleteTransaction(id);
-            return "Транзакция удалена.";
+            return "OK";
         }
 
         //метод для обновления баланса

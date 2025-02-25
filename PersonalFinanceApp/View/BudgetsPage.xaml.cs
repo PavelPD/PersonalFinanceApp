@@ -30,6 +30,11 @@ public partial class BudgetsPage : ContentPage
 
         EditBudgetPage.BudgetUpdated += (s, e) => LoadBudgets();
         AddBudgetPage.BudgetAdded += (s, e) => LoadBudgets();
+        EditTransactionPage.TransactionUpdated += (s, e) => LoadBudgets();
+        NewTransactionPage.TransactionAdded += (s, e) => LoadBudgets();
+        EditAccountPage.AccountUpdated += (s, e) => LoadBudgets();
+        EditCategoryPage.CategoryUpdated += (s, e) => LoadBudgets();
+        SettingsPage.DbRest += (s, e) => LoadBudgets();
     }
 
     private async void LoadBudgets()

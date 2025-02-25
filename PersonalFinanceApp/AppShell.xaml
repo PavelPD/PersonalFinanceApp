@@ -7,26 +7,24 @@
 
     <TabBar>
         <Tab Title="Главная" Icon="home_page.png">
-            <ShellContent Route="home" ContentTemplate="{DataTemplate local:HomePage}" />
+            <ShellContent Route="home" ContentTemplate="{DataTemplate local:HomePage}"/>
         </Tab>
 
         <Tab Title="Транзакции" Icon="transactions.png">
-            <ShellContent  Route="transactions" ContentTemplate="{DataTemplate local:TransactionsPage}" />
+            <ShellContent  Route="transactions" ContentTemplate="{DataTemplate local:TransactionsPage}"/>
         </Tab>
 
         <Tab Title="Создать транзакцию" Icon="add_transaction.png">
-            <ShellContent  Route="new_transaction" ContentTemplate="{DataTemplate local:NewTransactionPage}" />
+            <ShellContent  Route="new_transaction" ContentTemplate="{DataTemplate local:NewTransactionPage}"/>
         </Tab>
 
         <Tab Title="Бюджеты" Icon="budget_page.png">
-            <ShellContent  Route="budgets" ContentTemplate="{DataTemplate local:BudgetsPage}" />
+            <ShellContent  Route="budgets" ContentTemplate="{DataTemplate local:BudgetsPage}"/>
         </Tab>
 
         <Tab Title="Настройки" Icon="settings.png">
-            <ShellContent  Route="settings" ContentTemplate="{DataTemplate local:SettingsPage}" />
+            <ShellContent  Route="settings" ContentTemplate="{DataTemplate local:SettingsPage}"/>
         </Tab>
     </TabBar>
-
-    <ShellContent Route="editTransaction" ContentTemplate="{DataTemplate local:EditTransactionPage}"/>
 
 </Shell>

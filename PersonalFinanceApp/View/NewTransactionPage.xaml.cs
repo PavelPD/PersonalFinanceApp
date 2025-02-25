@@ -7,7 +7,7 @@ namespace PersonalFinanceApp.View;
 
 public partial class NewTransactionPage : ContentPage
 {
-    public static EventHandler TransactionAdded;
+    public static event EventHandler TransactionAdded;
 
 	private readonly TransactionProcessor _transactionProcessor;
 	private readonly CategoryProcessor _categoryProcessor;
@@ -55,9 +55,15 @@ public partial class NewTransactionPage : ContentPage
 
         LoadData();
 		BindingContext = this;
-	}
 
-	private async void LoadData()
+        AddAccountPage.AccountAdded += (s, e) => LoadData();
+        EditAccountPage.AccountUpdated += (s, e) => LoadData();
+        AddCategoryPage.CategoryAdded += (s, e) => LoadData();
+        EditCategoryPage.CategoryUpdated += (s, e) => LoadData();
+
+    }
+
+    private async void LoadData()
 	{		
 		var accounts = await _accountProcessor.GetAllAccounts();
 		var categories = await _categoryProcessor.GetAllCategory();
@@ -135,5 +141,11 @@ public partial class NewTransactionPage : ContentPage
         OnPropertyChanged(nameof(SelectedAccount));
         OnPropertyChanged(nameof(SelectedCategory));
         OnPropertyChanged(nameof(TransactionDate));
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        ClearPage();
     }
 }
