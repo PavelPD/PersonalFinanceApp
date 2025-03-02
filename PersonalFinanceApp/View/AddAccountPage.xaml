@@ -29,7 +29,7 @@
 
         <Frame Padding="10">
             <Grid ColumnDefinitions="*,*">
-                <Entry Text="{Binding Balance}"/>
+                <Entry Text="{Binding Balance}" Keyboard="Numeric"/>
                 <Label Text="Начальный баланс" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
             </Grid>
         </Frame>

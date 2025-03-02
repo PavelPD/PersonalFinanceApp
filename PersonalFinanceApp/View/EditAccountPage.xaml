@@ -34,7 +34,7 @@
 
         <Frame Padding="10">
             <Grid ColumnDefinitions="*,*">
-                <Entry Text="{Binding Account.Balance}"/>
+                <Entry Text="{Binding Account.Balance}" Keyboard="Numeric"/>
                 <Label Text="Баланса" TextColor="LightGrey" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="1"/>
             </Grid>
         </Frame>

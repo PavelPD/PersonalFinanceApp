@@ -29,7 +29,7 @@ public partial class AddCategoryPage : ContentPage
 
         _categoryProcessor = App.CategoryProcessor;
 
-        CategoryTypes = new List<string> { "income", "expense" };
+        CategoryTypes = new List<string> { "Доход", "Расход" };
 
         SaveCommand = new Command(async () => await SaveCategory());
         CancelCommand = new Command(async () => await Navigation.PopModalAsync());
@@ -48,7 +48,7 @@ public partial class AddCategoryPage : ContentPage
         var newCategory = new Category
         {
             Name = CategoryName,
-            Type = SelectedType,
+            Type = SelectedType == "Доход" ? "income" : "expense",
             Icon = Icon ?? "🗂"
         };
 

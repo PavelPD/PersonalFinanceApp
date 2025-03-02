@@ -98,7 +98,7 @@ namespace PersonalFinanceApp.BusinessLogic
         //Получить траты по категориям за период с возможной фильтрацией по счету
         public async Task<List<CategoryExpenseViewModel>> GetCategoryExpenses(DateTime startDate, DateTime endDate, bool isIncome, int? accountId = null)
         {
-            var allMonthlyAmounts = await GetTransactionsAmountForMonth(startDate, isIncome);
+            var amountForPeriod = await GetTransactionsAmountForMonth(startDate, isIncome);
             string type = isIncome ? "income" : "expense";
 
             //фильтр по дате
@@ -130,7 +130,7 @@ namespace PersonalFinanceApp.BusinessLogic
                         Name = category.Name,
                         Icon = category.Icon,
                         Amount = transaction.TotalSpent,
-                        Percentage = Math.Round((transaction.TotalSpent / allMonthlyAmounts), 2)
+                        Percentage = transaction.TotalSpent / amountForPeriod
                     });
                 }
             }            

@@ -44,7 +44,7 @@ public partial class AddAccountPage : ContentPage
             await DisplayAlert("Ошибка", result, "ok");
             return;
         }
-
+		
 		AccountAdded?.Invoke(this, EventArgs.Empty);
 		await Navigation.PopModalAsync();
     }

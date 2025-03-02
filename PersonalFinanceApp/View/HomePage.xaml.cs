@@ -1,8 +1,6 @@
 using PersonalFinanceApp.BusinessLogic;
 using PersonalFinanceApp.Models;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.Globalization;
 using System.Windows.Input;
 
 namespace PersonalFinanceApp.View;
@@ -71,7 +69,7 @@ public partial class HomePage : ContentPage
         if (_analyticsService == null) return;
         
         DateTime startMonth = new DateTime(_currentDate.Year, _currentDate.Month, 1);
-        DateTime endMonth = startMonth.AddMonths(1).AddDays(-1);
+        DateTime endMonth = startMonth.AddMonths(1);
         SelectedMonth = _currentDate.ToString("MMMM yyyy");
         
         //блок баланса и прироста
