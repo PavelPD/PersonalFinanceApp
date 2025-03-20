@@ -18,7 +18,7 @@ public partial class HomePage : ContentPage
     public ICommand ChartSwitchCommand { get; }
     public ICommand ShowExpensesCommand { get; }
     public ICommand ShowIncomeCommand { get; }
-    
+
     public double Balance { get; set; }
     public double PeriodGrowth { get; set; }
     public string SelectedMonth { get; set; }
@@ -31,6 +31,7 @@ public partial class HomePage : ContentPage
     public string IncomeButtonColor { get; set; }
     public string ExpensesTextColor { get; set; }
     public string IncomeTextColor { get; set; }
+    public string PeriodGrowthColor { get; set; }
 
     private string MainBackground = "#272727";
     private string MainForeground = "#F3F3F3";
@@ -46,7 +47,7 @@ public partial class HomePage : ContentPage
         NextMonthCommand = new Command(() => ChangeMonth(1));
 
         ShowExpensesCommand = new Command(() => ToggleExpensesIncome(false));
-        ShowIncomeCommand = new Command(() => ToggleExpensesIncome(true));
+        ShowIncomeCommand = new Command(() => ToggleExpensesIncome(true));     
 
         ExpensesButtonColor = MainForeground;
         ExpensesTextColor = MainBackground;
@@ -74,7 +75,8 @@ public partial class HomePage : ContentPage
         
         //блок баланса и прироста
         Balance = await _analyticsService.GetTotalBalance();
-        PeriodGrowth = Math.Round(await _analyticsService.GetProfit(startMonth, endMonth), 2);
+        PeriodGrowth = await _analyticsService.GetProfit(startMonth, endMonth);
+        PeriodGrowthColor = PeriodGrowth > 0 ? "Green" : "Red";
 
         //блок транзакций за месяц и средний день
         TransactionsForThisMonth = (IsIncomeSelected ? "Доходы" : "Расходы") + $" за {_currentDate.ToString("MMM")}" ;
@@ -85,7 +87,6 @@ public partial class HomePage : ContentPage
             : DateTime.DaysInMonth(_currentDate.Year, _currentDate.Month);
             
         AveragePerDay = TransactionAmountInMonth / dayPassed;
-        
 
         //запрос списка трат по категориям
         var expensesList = await _analyticsService.GetCategoryExpenses(startMonth, endMonth, IsIncomeSelected);
@@ -98,6 +99,7 @@ public partial class HomePage : ContentPage
 
         OnPropertyChanged(nameof(Balance));
         OnPropertyChanged(nameof(PeriodGrowth));
+        OnPropertyChanged(nameof(PeriodGrowthColor));
         OnPropertyChanged(nameof(TransactionsForThisMonth));
         OnPropertyChanged(nameof(TransactionAmountInMonth));
         OnPropertyChanged(nameof(AveragePerDay));

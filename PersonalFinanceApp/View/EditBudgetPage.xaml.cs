@@ -32,7 +32,10 @@ public partial class EditBudgetPage : ContentPage
 
 		SaveCommand = new Command(async () => await SaveBudget());
 		DeleteCommand = new Command(async () => await DeleteBudget());
-        CancelCommand = new Command(async () => await Navigation.PopModalAsync());
+        CancelCommand = new Command(async () => {
+			await Navigation.PopModalAsync();
+            HideKeyboard.Hide();
+        });
 
         BindingContext = this;
 		LoadData();
@@ -74,6 +77,8 @@ public partial class EditBudgetPage : ContentPage
         }
 
         BudgetUpdated?.Invoke(this, EventArgs.Empty);
+
+        HideKeyboard.Hide();
         await Navigation.PopModalAsync();
     }
 
@@ -85,6 +90,8 @@ public partial class EditBudgetPage : ContentPage
 		await _budgetProcessor.DeleteBudget(Budget.Budgets_id);
 
 		BudgetUpdated?.Invoke(this, EventArgs.Empty);
-		await Navigation.PopModalAsync();
+
+        HideKeyboard.Hide();
+        await Navigation.PopModalAsync();
     }
 }

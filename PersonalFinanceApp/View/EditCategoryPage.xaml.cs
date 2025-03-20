@@ -36,7 +36,10 @@ public partial class EditCategoryPage : ContentPage
 
         SaveCommand = new Command(async () => await SaveCategory());
         DeleteCommand = new Command(async () => await DeleteCategory());
-        CancelCommand = new Command(async () => await Navigation.PopModalAsync());
+        CancelCommand = new Command(async () => {
+            await Navigation.PopModalAsync();
+            HideKeyboard.Hide();
+        });
 
         BindingContext = this;
     }
@@ -52,6 +55,8 @@ public partial class EditCategoryPage : ContentPage
         }
 
         CategoryUpdated?.Invoke(this, EventArgs.Empty);
+
+        HideKeyboard.Hide();
         await Navigation.PopModalAsync();
     }
 
@@ -62,6 +67,8 @@ public partial class EditCategoryPage : ContentPage
 
         await _categoryProcessor.DeleteCategory(Category.Id);
         CategoryUpdated?.Invoke(this, EventArgs.Empty);
+
+        HideKeyboard.Hide();
         await Navigation.PopModalAsync();
     }
 

@@ -24,7 +24,10 @@ public partial class AddAccountPage : ContentPage
 		_accountProcessor = App.AccountProcessor;
 
 		SaveCommand = new Command(async () => await SaveAccount());
-        CancelCommand = new Command(async () => await Navigation.PopModalAsync());
+        CancelCommand = new Command(async () => {
+			await Navigation.PopModalAsync();
+            HideKeyboard.Hide();
+        });
 
 		BindingContext = this;
     }
@@ -46,6 +49,8 @@ public partial class AddAccountPage : ContentPage
         }
 		
 		AccountAdded?.Invoke(this, EventArgs.Empty);
-		await Navigation.PopModalAsync();
+
+        HideKeyboard.Hide();
+        await Navigation.PopModalAsync();
     }
 }

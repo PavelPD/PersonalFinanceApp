@@ -104,6 +104,7 @@ public partial class NewTransactionPage : ContentPage
         ClearPage();
 
         TransactionAdded?.Invoke(this, EventArgs.Empty);
+        HideKeyboard.Hide();
     }
 
 	private void SetTransactionType(string type)

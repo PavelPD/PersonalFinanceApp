@@ -32,7 +32,10 @@ public partial class AddCategoryPage : ContentPage
         CategoryTypes = new List<string> { "Доход", "Расход" };
 
         SaveCommand = new Command(async () => await SaveCategory());
-        CancelCommand = new Command(async () => await Navigation.PopModalAsync());
+        CancelCommand = new Command(async () => {
+            await Navigation.PopModalAsync();
+            HideKeyboard.Hide();
+        });
 
         BindingContext = this;
     }
@@ -61,6 +64,8 @@ public partial class AddCategoryPage : ContentPage
         }
 
         CategoryAdded?.Invoke(this, EventArgs.Empty);
+
+        HideKeyboard.Hide();
         await Navigation.PopModalAsync();
     }
 

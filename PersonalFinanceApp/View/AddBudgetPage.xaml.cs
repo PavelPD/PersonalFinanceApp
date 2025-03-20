@@ -28,7 +28,10 @@ public partial class AddBudgetPage : ContentPage
         _categoryProcessor = App.CategoryProcessor;
 
 		SaveCommand = new Command(async () => await SaveBudget());
-		CancelCommand = new Command(async () => await Navigation.PopModalAsync());
+		CancelCommand = new Command(async () => {
+			await Navigation.PopModalAsync();
+            HideKeyboard.Hide();
+        });
 
 		LoadData();
 		BindingContext = this;
@@ -67,6 +70,8 @@ public partial class AddBudgetPage : ContentPage
         }
 
         BudgetAdded?.Invoke(this, EventArgs.Empty);
-		await Navigation.PopModalAsync();
+
+        HideKeyboard.Hide();
+        await Navigation.PopModalAsync();
 	}
 }

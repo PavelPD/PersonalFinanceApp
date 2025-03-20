@@ -17,8 +17,8 @@ public partial class EditAccountPage : ContentPage
     public ICommand CancelCommand { get; }
 
     public EditAccountPage(Account account)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
         _accountProcessor = App.AccountProcessor;
 
@@ -31,7 +31,10 @@ public partial class EditAccountPage : ContentPage
 
         SaveCommand = new Command(async () => await SaveAccount());
         DeleteCommand = new Command(async () => await DeleteAccount());
-        CancelCommand = new Command(async () => await Navigation.PopModalAsync());
+        CancelCommand = new Command(async () => {
+            await Navigation.PopModalAsync();
+            HideKeyboard.Hide();
+        });
 
         BindingContext = this;
     }
@@ -47,6 +50,8 @@ public partial class EditAccountPage : ContentPage
         }
 
         AccountUpdated?.Invoke(this, EventArgs.Empty);
+
+        HideKeyboard.Hide();
         await Navigation.PopModalAsync();
     }
 
@@ -54,10 +59,12 @@ public partial class EditAccountPage : ContentPage
     {
         bool confirm = await DisplayAlert("Удаление", "Вы уверены, что хотите удалить счет? Вместе с ним удалятся все связанные транзакции", "Да", "Нет");
         if (!confirm) return;
-
+        
         await _accountProcessor.DeleteAccount(Account.Id);
 
         AccountUpdated?.Invoke(this, EventArgs.Empty);
+
+        HideKeyboard.Hide();
         await Navigation.PopModalAsync();
-    }
+    }    
 }

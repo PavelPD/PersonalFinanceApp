@@ -36,7 +36,10 @@ public partial class EditTransactionPage : ContentPage
 
 		SaveCommand = new Command(async () => await SaveTransaction());
         DeleteCommand = new Command(async () => await DeleteTransaction());
-        CancelCommand = new Command(async () => Navigation.PopModalAsync());
+        CancelCommand = new Command(async () => {
+			Navigation.PopModalAsync();
+            HideKeyboard.Hide();
+        });
 
 		BindingContext = this;
 		LoadData();
@@ -79,7 +82,9 @@ public partial class EditTransactionPage : ContentPage
 		} 
 
 		TransactionUpdated?.Invoke(this, EventArgs.Empty);
-		await Navigation.PopModalAsync();
+
+        HideKeyboard.Hide();
+        await Navigation.PopModalAsync();
 	}
 
     private async Task DeleteTransaction()
@@ -89,7 +94,9 @@ public partial class EditTransactionPage : ContentPage
 
         await _transactionProcessor.DeleteTransaction(transactionViewModel.Transaction_id);
 
-        TransactionUpdated?.Invoke(this, EventArgs.Empty); 
-		await Navigation.PopModalAsync();
+        TransactionUpdated?.Invoke(this, EventArgs.Empty);
+
+        HideKeyboard.Hide();
+        await Navigation.PopModalAsync();
     }
 }
